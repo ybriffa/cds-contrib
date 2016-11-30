@@ -10,7 +10,7 @@ import (
 )
 
 func TestTemplateCall(t *testing.T) {
-	client := template.NewClient("template-plain", "../template-plain", "ID", "http://localhost:8081", true)
+	client := template.NewClient("cds-template-plain", "../cds-template-plain", "ID", "http://localhost:8081", true)
 	defer client.Kill()
 
 	_template, err := client.Instance()
@@ -20,13 +20,13 @@ func TestTemplateCall(t *testing.T) {
 
 	t.Log("Template initialized")
 
-	assert.Equal(t, "template-plain", _template.Name())
+	assert.Equal(t, "cds-template-plain", _template.Name())
 	assert.Equal(t, "Yvonnick Esnault <yvonnick.esnault@corp.ovh.com>", _template.Author())
-	assert.Equal(t, "github.com/ovh/cds-contrib/templates/template-plain/TemplatePlain", _template.Identifier())
+	assert.Equal(t, "github.com/ovh/cds-contrib/templates/cds-template-plain/TemplatePlain", _template.Identifier())
 	assert.Equal(t, "BUILD", _template.Type())
 
 	p := _template.Parameters()
-	assert.Equal(t, 2, len(p))
+	assert.Equal(t, 3, len(p))
 
 	params := template.NewParameters(map[string]string{})
 	app, err := _template.Apply(template.NewApplyOptions("proj", "app", *params))

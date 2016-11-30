@@ -10,7 +10,7 @@ type TemplatePlain struct {
 }
 
 func (t *TemplatePlain) Name() string {
-	return "template-plain"
+	return "cds-template-plain"
 }
 
 func (t *TemplatePlain) Description() string {
@@ -34,7 +34,7 @@ Packaging and Deploy are optional.
 }
 
 func (t *TemplatePlain) Identifier() string {
-	return "github.com/ovh/cds-contrib/templates/template-plain/TemplatePlain"
+	return "github.com/ovh/cds-contrib/templates/cds-template-plain/TemplatePlain"
 }
 
 func (t *TemplatePlain) Author() string {
@@ -47,6 +47,12 @@ func (t *TemplatePlain) Type() string {
 
 func (t *TemplatePlain) Parameters() []sdk.TemplateParam {
 	return []sdk.TemplateParam{
+		{
+			Name:        "repo",
+			Type:        sdk.StringVariable,
+			Value:       "",
+			Description: "Your source code repository",
+		},
 		{
 			Name:        "withPackage",
 			Type:        sdk.BooleanVariable,
@@ -169,6 +175,10 @@ echo "CALL YOUR DEPLOY SCRIPT HERE"`, []sdk.Requirement{
 	}
 
 	/* Assemble Pipeline */
+
+	a.Variable = []sdk.Variable{
+		{Name: "repo", Value: opts.Parameters().Get("repo"), Type: sdk.StringVariable},
+	}
 
 	a.Pipelines = []sdk.ApplicationPipeline{
 		{
