@@ -3,10 +3,10 @@
 ## Plain Template
 
 This sample template creates:
-- a build pipeline with	two stages: Compile Stage and Packaging Stage
+- a build pipeline with	two stages: Commit Stage and Packaging Stage
 - a deploy pipeline with one stage: Deploy Stage
 
-Compile Stage:
+Commit Stage:
 - run git clone
 - run make build
 

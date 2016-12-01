@@ -16,10 +16,10 @@ func (t *TemplatePlain) Name() string {
 func (t *TemplatePlain) Description() string {
 	return `
 This sample template create
-- a build pipeline with	two stages: Compile Stage and Packaging Stage
+- a build pipeline with	two stages: Commit Stage and Packaging Stage
 - a deploy pipeline with one stage: Deploy Stage
 
-Compile Stage :
+Commit Stage :
 - run git clone
 - run make build
 
@@ -83,7 +83,7 @@ func (t *TemplatePlain) Apply(opts template.IApplyOptions) (sdk.Application, err
 	}
 
 	/* Build Pipeline */
-	/* Build Pipeline - Compile Stage */
+	/* Build Pipeline - Commit Stage */
 
 	jobCompile := sdk.Action{
 		Name: "Compile",
@@ -109,7 +109,7 @@ cd $(ls -1) && make`,
 	}
 
 	compileStage := sdk.Stage{
-		Name:       "Compile Stage",
+		Name:       "Commit Stage",
 		BuildOrder: 0,
 		Enabled:    true,
 		Actions:    []sdk.Action{jobCompile},
