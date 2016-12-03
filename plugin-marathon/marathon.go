@@ -143,7 +143,7 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration File %s: OK\n", tmplConf)
 
 	//Searching for application
-	val := url.Values{"ID": []string{appConfig.ID}}
+	val := url.Values{"id": []string{appConfig.ID}}
 	applications, err := client.Applications(val)
 	if err != nil {
 		plugin.SendLog(a, "PLUGIN-MARATHON", "Failed to list applications : %s\n", err.Error())
