@@ -106,7 +106,7 @@ func ackAction(c *cli.Context) error {
 		if err != nil {
 			return cli.NewExitError(err.Error(), 41)
 		}
-		if len(logsBody) > 700 {
+		if len(logsBody) > 700 * 1024 {
 			return cli.NewExitError("Log file too large. Limit is up to 700 ko", 41)
 		}
 	}
