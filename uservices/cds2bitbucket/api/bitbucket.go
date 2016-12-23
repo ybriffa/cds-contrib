@@ -70,11 +70,10 @@ func process(event *sdk.EventPipelineBuild) {
 
 	log.Debugf("bitbucket url %+v with json:%s", pathBitbucket, jsonStr)
 
-	// TODO
-	/*if _, err := reqWant(pathBitbucket, "POST", jsonStr); err != nil {
+	if _, err := reqWant(pathBitbucket, "POST", jsonStr); err != nil {
 		log.Warnf("Error on bitbucket: %ss", err)
 	}
-	*/
+
 	return
 }
 
