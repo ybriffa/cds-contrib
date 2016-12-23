@@ -177,26 +177,6 @@
 			"revisionTime": "2016-10-06T23:39:02Z"
 		},
 		{
-			"checksumSHA1": "C7XCE4vH3NcqDgZymgn78lKjm5s=",
-			"path": "github.com/ovh/cds/sdk",
-			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
-			"revisionTime": "2016-12-23T10:22:36Z"
-		},
-		{
-			"checksumSHA1": "8Y05Pz7onrQPcVWW6JStSsYRh6E=",
-			"origin": "github.com/ovh/cds/vendor/github.com/pelletier/go-buffruneio",
-			"path": "github.com/pelletier/go-buffruneio",
-			"revision": "df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d",
-			"revisionTime": "2016-01-24T19:35:03Z"
-		},
-		{
-			"checksumSHA1": "CtI2rBQw2rxHNIU+a0rcAf29Sco=",
-			"origin": "github.com/ovh/cds/vendor/github.com/pelletier/go-toml",
-			"path": "github.com/pelletier/go-toml",
-			"revision": "45932ad32dfdd20826f5671da37a5f3ce9f26a8d",
-			"revisionTime": "2016-09-20T07:07:15Z"
-		},
-		{
 			"checksumSHA1": "BMjSRH5mPFsBz4Z1r9f/MzwVlXA=",
 			"path": "github.com/pierrec/lz4",
 			"revision": "5c9560bfa9ace2bf86080bf40d46b34ae44604df",

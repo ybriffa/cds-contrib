@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/mitchellh/mapstructure"
 	"github.com/ovh/cds/sdk"
 	"github.com/spf13/viper"
 )
@@ -25,15 +28,29 @@ type BitbucketRequest struct {
 }
 
 // Process send message to all notifications backend
-func process(event *sdk.EventPipelineBuild) {
+func process(event sdk.Event) error {
+
+	log.Debugf("process> receive: type:%s all: %+v", event.EventType, event)
+
+	var eventpb sdk.EventPipelineBuild
+
+	if event.EventType == fmt.Sprintf("%T", sdk.EventPipelineBuild{}) {
+		if err := mapstructure.Decode(event.Payload, &eventpb); err != nil {
+			log.Warnf("Error during consumption: %s", err)
+			return nil
+		}
+	} else {
+		// skip all event != eventPipelineBuild
+		return nil
+	}
 
 	log.Debugf("Process event:%+v", event)
 
-	cdsProject := event.ProjectKey
-	cdsApplication := event.ApplicationName
-	cdsPipelineName := event.PipelineName
-	cdsBuildNumber := event.BuildNumber
-	cdsEnvironmentName := event.EnvironmentName
+	cdsProject := eventpb.ProjectKey
+	cdsApplication := eventpb.ApplicationName
+	cdsPipelineName := eventpb.PipelineName
+	cdsBuildNumber := eventpb.BuildNumber
+	cdsEnvironmentName := eventpb.EnvironmentName
 
 	key := fmt.Sprintf("%s-%s-%s",
 		cdsProject,
@@ -48,33 +65,31 @@ func process(event *sdk.EventPipelineBuild) {
 		cdsApplication,
 		cdsPipelineName,
 		cdsBuildNumber,
-		cdsEnvironmentName,
+		url.QueryEscape(cdsEnvironmentName),
 	)
 
 	r := &BitbucketRequest{
 		Key:   key,
 		Name:  fmt.Sprintf("%s%d", key, cdsBuildNumber),
-		State: getBitbucketStateFromStatus(event.Status),
+		State: getBitbucketStateFromStatus(eventpb.Status),
 		URL:   url,
 	}
 
 	jsonStr, err := json.Marshal(r)
 	if err != nil {
-		log.Errorf("Error while marshalling bitbucketRequest: %s", err.Error())
-		return
+		log.Warnf("Error while marshalling bitbucketRequest: %s", err.Error())
+		return nil
 	}
 
 	// http://localhost:7990/bitbucket
 	// /rest/build-status/1.0/commits/9e72f04322c4a1f240e0b3158c67c3c19cdd16e7
-	pathBitbucket := fmt.Sprintf("%s/rest/build-status/1.0/commits/%s", viper.GetString("url_bitbucket"), event.Hash)
-
+	pathBitbucket := fmt.Sprintf("%s/rest/build-status/1.0/commits/%s", viper.GetString("url_bitbucket"), eventpb.Hash)
 	log.Debugf("bitbucket url %+v with json:%s", pathBitbucket, jsonStr)
 
-	if _, err := reqWant(pathBitbucket, "POST", jsonStr); err != nil {
-		log.Warnf("Error on bitbucket: %ss", err)
+	if _, err := request(pathBitbucket, "POST", bytes.NewBuffer(jsonStr)); err != nil {
+		return fmt.Errorf("Error on bitbucket: %ss", err)
 	}
-
-	return
+	return nil
 }
 
 func getBitbucketStateFromStatus(status sdk.Status) string {

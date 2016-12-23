@@ -17,30 +17,23 @@ const VERSION = "0.1.0"
 var mainCmd = &cobra.Command{
 	Use: "cds2bitbucket",
 	Run: func(cmd *cobra.Command, args []string) {
-		viper.SetEnvPrefix("tat-uservice")
+		viper.SetEnvPrefix("cds")
 		viper.AutomaticEnv()
 
-		if viper.GetBool("production") {
-			// Only log the warning severity or above.
+		switch viper.GetString("log_level") {
+		case "debug":
+			log.SetLevel(log.DebugLevel)
+		case "info":
+			log.SetLevel(log.InfoLevel)
+		case "error":
 			log.SetLevel(log.WarnLevel)
-			log.Info("Set Production Mode ON")
 			gin.SetMode(gin.ReleaseMode)
-		} else {
+		default:
 			log.SetLevel(log.DebugLevel)
 		}
 
-		if viper.GetString("log_level") != "" {
-			switch viper.GetString("log_level") {
-			case "debug":
-				log.SetLevel(log.DebugLevel)
-			case "info":
-				log.SetLevel(log.InfoLevel)
-			case "error":
-				log.SetLevel(log.ErrorLevel)
-			}
-		}
-
-		router := gin.Default()
+		router := gin.New()
+		router.Use(gin.Recovery())
 
 		router.Use(cors.Middleware(cors.Config{
 			Origins:         "*",
@@ -75,8 +68,6 @@ var mainCmd = &cobra.Command{
 
 func init() {
 	flags := mainCmd.Flags()
-	flags.Bool("production", false, "Production mode")
-	viper.BindPFlag("production", flags.Lookup("production"))
 
 	flags.String("log-level", "", "Log Level : debug, info or warn")
 	viper.BindPFlag("log_level", flags.Lookup("log-level"))
