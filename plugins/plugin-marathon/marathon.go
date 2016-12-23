@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"text/template"
 	"time"
 
 	"github.com/facebookgo/httpcontrol"
@@ -158,12 +158,14 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	//Update or create application
 	if appExists {
 		if _, err := client.UpdateApplication(appConfig, true); err != nil {
-			plugin.SendLog(a, "PLUGIN-MARATHON", "Application %S update failed :%s\n", appConfig.ID, err)
+			plugin.SendLog(a, "PLUGIN-MARATHON", "Application %s update failed:%s\n", appConfig.ID, err)
+			return plugin.Fail
 		}
 		plugin.SendLog(a, "PLUGIN-MARATHON", "Application updated %s: OK\n", appConfig.ID)
 	} else {
 		if _, err := client.CreateApplication(appConfig); err != nil {
 			plugin.SendLog(a, "PLUGIN-MARATHON", "Application %S creation failed :%s\n", appConfig.ID, err)
+			return plugin.Fail
 		}
 		plugin.SendLog(a, "PLUGIN-MARATHON", "Application creation %s: OK\n", appConfig.ID)
 	}
@@ -254,8 +256,8 @@ func tmplApplicationConfigFile(a plugin.IAction, filepath string) (string, error
 		kb := strings.Replace(k, ".", "__", -1)
 		data[kb] = v
 		re := regexp.MustCompile("{{." + k + "(.*)}}")
-		sm := re.FindStringSubmatch(fileContent)
 		for {
+			sm := re.FindStringSubmatch(fileContent)
 			if len(sm) > 0 {
 				fileContent = strings.Replace(fileContent, sm[0], "{{."+kb+sm[1]+"}}", -1)
 			} else {
