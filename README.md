@@ -8,7 +8,7 @@ CDS support several kind of extensions:
 - Plugins
 - Templates
 - Secret Backends
-- uServices
+- µServices
 
 See [CDS documentation](https://github.com/ovh/cds) for more details.
 
@@ -31,9 +31,10 @@ See [CDS documentation](https://github.com/ovh/cds) for more details.
 
 - [Vault Secret Backend](https://github.com/ovh/cds-contrib/tree/master/secret-backends/secret-backend-vault)
 
-## uServices
+## µServices
 
 - [cds2bitbucket](https://github.com/ovh/cds-contrib/tree/master/uservices/cds2bitbucket)
+- [cds2tat](https://github.com/ovh/cds-contrib/tree/master/uservices/cds2tat)
 
 ## Contributions
 
