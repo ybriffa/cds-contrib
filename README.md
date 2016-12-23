@@ -12,8 +12,8 @@ See [CDS documentation](https://github.com/ovh/cds) for more details.
 
 ## Plugins
 
-- [Kafka Publisher](https://github.com/ovh/cds-contrib/tree/master/plugin-kafka-publish)
-- [Mesos/Marathon Deployment](https://github.com/ovh/cds-contrib/tree/master/plugin-marathon)
+- [Kafka Publisher](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-kafka-publish)
+- [Mesos/Marathon Deployment](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-marathon)
 
 ## Templates
 
@@ -21,7 +21,7 @@ See [CDS documentation](https://github.com/ovh/cds) for more details.
 
 ## Secret Backends
 
-- [Vault Secret Backend](https://github.com/ovh/cds-contrib/tree/master/secret-backend-vault)
+- [Vault Secret Backend](https://github.com/ovh/cds-contrib/tree/master/secret-backends/secret-backend-vault)
 
 ## Contributions
 

@@ -1,6 +1,6 @@
 {
 	"comment": "",
-	"ignore": "github.com/ovh/cds/sdk/plugin",
+	"ignore": "test",
 	"package": [
 		{
 			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
@@ -10,28 +10,48 @@
 			"revisionTime": "2016-06-15T09:26:46Z"
 		},
 		{
-			"checksumSHA1": "fi8tUmUNxJXnKUHTXtW9Z1A0XYk=",
+			"checksumSHA1": "O/eUfUoi7lWgZiipUP939AAdKk4=",
 			"path": "github.com/donovanhide/eventsource",
 			"revision": "fd1de70867126402be23c306e1ce32828455d85b",
 			"revisionTime": "2016-05-25T20:46:10Z"
 		},
 		{
-			"checksumSHA1": "1ZfHvLjKK3SlqAqktGUIabnX50o=",
+			"checksumSHA1": "aIb20NobDZnQMGJzDAHh0fDuOEg=",
 			"path": "github.com/facebookgo/httpcontrol",
 			"revision": "ccde4420e1fee9af5da365cb76075b95683f39a6",
 			"revisionTime": "2015-07-08T23:40:01Z"
 		},
 		{
-			"checksumSHA1": "UUIH1Z3Q/guwyLpwjin85jQOQwo=",
+			"checksumSHA1": "Xh2ijbSCRiyar2bx2Wq+PlSPWy4=",
 			"path": "github.com/gambol99/go-marathon",
-			"revision": "de71d69f200fd3111382fb9e8ea942c7deec259b",
-			"revisionTime": "2016-08-19T10:31:30Z"
+			"revision": "8908223430b37fc4106d8b8cf1f38cf7124020f1",
+			"revisionTime": "2016-09-29T09:01:29Z"
 		},
 		{
-			"checksumSHA1": "fQfbLbXtO2VUPje/bqhDfzKIZxI=",
+			"checksumSHA1": "yyAzHoiVLu+xywYI2BDyRq6sOqE=",
 			"path": "github.com/google/go-querystring/query",
 			"revision": "9235644dd9e52eeae6fa48efd539fdc351a0af53",
 			"revisionTime": "2016-03-11T01:20:12Z"
+		},
+		{
+			"checksumSHA1": "Jh6jdEjDeajnpEG8xlrLrnYw210=",
+			"origin": "github.com/ovh/cds/vendor/github.com/hashicorp/go-plugin",
+			"path": "github.com/hashicorp/go-plugin",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
+		},
+		{
+			"checksumSHA1": "ZhK6IO2XN81Y+3RAjTcVm1Ic7oU=",
+			"origin": "github.com/ovh/cds/vendor/github.com/hashicorp/yamux",
+			"path": "github.com/hashicorp/yamux",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
+		},
+		{
+			"checksumSHA1": "a5VaDyfBgV7iX/05yZjM7gTIM2I=",
+			"path": "github.com/ovh/cds/sdk/plugin",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
 		},
 		{
 			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
@@ -41,35 +61,11 @@
 			"revisionTime": "2016-06-15T09:26:46Z"
 		},
 		{
-			"checksumSHA1": "5mJ/wol4LCFBUct8fbQVkRJv7ZI=",
+			"checksumSHA1": "iydUphwYqZRq3WhstEdGsbvBAKs=",
 			"path": "github.com/stretchr/testify/assert",
 			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
 			"revisionTime": "2016-06-15T09:26:46Z"
-		},
-		{
-			"checksumSHA1": "Z+Q6utVceyBKu84EnOUwGISo0FA=",
-			"path": "github.com/xeipuuv/gojsonpointer",
-			"revision": "e0fe6f68307607d540ed8eac07a342c33fa1b54a",
-			"revisionTime": "2015-10-27T08:21:46Z"
-		},
-		{
-			"checksumSHA1": "BY7Tay1BrYwP4Rp9VOAjVXOWAxc=",
-			"path": "github.com/xeipuuv/gojsonreference",
-			"revision": "e02fc20de94c78484cd5ffb007f8af96be030a45",
-			"revisionTime": "2015-08-08T06:50:54Z"
-		},
-		{
-			"checksumSHA1": "b3UT4A3+Q2KwMeXviF7IlVBkFRk=",
-			"path": "github.com/xeipuuv/gojsonschema",
-			"revision": "4f624f6197547606054e042e7903db103585e151",
-			"revisionTime": "2016-08-11T07:09:01Z"
-		},
-		{
-			"checksumSHA1": "lJHPwsxC3Xws7TIRUrB3Ki5HqkU=",
-			"path": "gopkg.in/yaml.v2",
-			"revision": "a5b47d31c556af34a302ce5d659e6fea44d90de0",
-			"revisionTime": "2016-09-28T15:37:09Z"
 		}
 	],
-	"rootPath": "github.com/ovh/cds-contrib/plugin-marathon"
+	"rootPath": "github.com/ovh/cds-contrib/plugins/plugin-marathon"
 }
