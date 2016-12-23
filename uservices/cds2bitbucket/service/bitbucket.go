@@ -106,3 +106,12 @@ func getBitbucketStateFromStatus(status sdk.Status) string {
 		return failed
 	}
 }
+
+func checkBitbucket() error {
+	p := fmt.Sprintf("%s/rest/api/1.0/users", viper.GetString("url_bitbucket"))
+	if _, err := request(p, "GET", nil); err != nil {
+		log.Errorf("Error Check bitbucket, path:%s err:%s", p, err)
+		return fmt.Errorf("Error Check bitbucket, please check logs")
+	}
+	return nil
+}

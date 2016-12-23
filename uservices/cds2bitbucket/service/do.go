@@ -1,11 +1,13 @@
 package main
 
 import (
-	log "github.com/Sirupsen/logrus"
-	"github.com/spf13/viper"
+	"net/http"
 
+	log "github.com/Sirupsen/logrus"
+	"github.com/gin-gonic/gin"
 	"github.com/ovh/cds/sdk"
 	"github.com/ovh/cds/sdk/event"
+	"github.com/spf13/viper"
 )
 
 func do() {
@@ -19,4 +21,12 @@ func do() {
 		},
 		log.Errorf,
 	)
+}
+
+func check(ctx *gin.Context) {
+	if errBitbucket := checkBitbucket(); errBitbucket != nil {
+		ctx.JSON(http.StatusOK, gin.H{"result": gin.H{"bitbucket": "KO"}})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"result": "OK"})
 }

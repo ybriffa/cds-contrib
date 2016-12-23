@@ -48,6 +48,8 @@ var mainCmd = &cobra.Command{
 			ctx.JSON(http.StatusOK, gin.H{"version": VERSION})
 		})
 
+		router.GET("/mon/check", check)
+
 		s := &http.Server{
 			Addr:           ":" + viper.GetString("listen_port"),
 			Handler:        router,
