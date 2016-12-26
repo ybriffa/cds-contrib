@@ -71,17 +71,17 @@ func processMsg(eventType, cdsProject, cdsApp, cdsPipeline, cdsEnvironment strin
 	text := fmt.Sprintf("#cds #type:%s #project:%s #app:%s #pipeline:%s #environment:%s #version:%d #branch:%s",
 		eventType, cdsProject, cdsApp, cdsPipeline, cdsEnvironment, version, branch)
 
-	tagsReference := fmt.Sprintf("#cds,#type:%s,#project:%s,#app:%s,#pipeline:%s,#environment:%s,#version:%d,#branch:%s",
-		eventType, cdsProject, cdsApp, cdsPipeline, cdsEnvironment, version, branch)
+	tagsReference := fmt.Sprintf("cds,project:%s,app:%s,pipeline:%s,environment:%s,version:%d,branch:%s",
+		cdsProject, cdsApp, cdsPipeline, cdsEnvironment, version, branch)
 
 	msg := tat.MessageJSON{
 		Text:         text,
-		TagReference: tagsReference,
 		Labels:       getLabelsFromStatus(cdsStatus),
+		TagReference: tagsReference,
 		Topic:        viper.GetString("topic_tat_engine"),
 	}
 
-	if _, err := getClient().MessageAdd(msg); err != nil {
+	if _, err := getClient().MessageRelabelOrCreate(msg); err != nil {
 		return fmt.Errorf("Error while MessageAdd:%s", err)
 	}
 

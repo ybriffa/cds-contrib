@@ -151,8 +151,8 @@
 			"checksumSHA1": "AMjHZaynjqQ8pzRPA1a6IBFZ1LI=",
 			"origin": "github.com/ovh/tat/vendor/github.com/jinzhu/now",
 			"path": "github.com/jinzhu/now",
-			"revision": "26bc2d22db5b4a9a4db138ab6d8d0b7cf3b6583a",
-			"revisionTime": "2016-12-23T08:51:29Z"
+			"revision": "1d910f0ea138a7419f0adfdae6a7af9d8b1a09a3",
+			"revisionTime": "2016-12-26T09:00:27Z"
 		},
 		{
 			"checksumSHA1": "BM6ZlNJmtKy3GBoWwg2X55gnZ4A=",
@@ -197,10 +197,10 @@
 			"revisionTime": "2016-12-23T14:03:11Z"
 		},
 		{
-			"checksumSHA1": "XSfhoFNUTezqW5vQ7wcENDDLC3g=",
+			"checksumSHA1": "T6KAwkT5pknwofyJY/7XMmlZB7Q=",
 			"path": "github.com/ovh/tat",
-			"revision": "26bc2d22db5b4a9a4db138ab6d8d0b7cf3b6583a",
-			"revisionTime": "2016-12-23T08:51:29Z"
+			"revision": "1d910f0ea138a7419f0adfdae6a7af9d8b1a09a3",
+			"revisionTime": "2016-12-26T09:00:27Z"
 		},
 		{
 			"checksumSHA1": "8Y05Pz7onrQPcVWW6JStSsYRh6E=",
