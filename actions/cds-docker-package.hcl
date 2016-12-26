@@ -35,21 +35,11 @@ parameters = {
 	}
 	"imageTag" = {
 		type = "string"
-		description = "Tag og your docker image.
+		description = "Tag of your docker image.
 Enter mytag for build image myregistry/myimage:mytag. {{.cds.version}} is a good tag from CDS.
 You can use many tags: firstTag,SecondTag
 Example : {{.cds.version}},latest"
 		value = "{{.cds.version}}"
-	}
-	"dockerPush" = {
-		type = "boolean"
-		description = "Docker push built image?"
-		value = "true"
-	}
-	"dockerRMi" = {
-		type = "boolean"
-		description = "docker rmi built image?"
-		value = "false"
 	}
 }
 
@@ -71,12 +61,7 @@ EOF
 		script = <<EOF
 #!/bin/bash
 
-if [ "xtrue" != "x{{.dockerPush}}" ]; then
-	echo "docker push: {{.dockerPush}}. So, no image pushed... "
-	exit 0
-fi;
-
-IFS=', ' read -r -a tags <<< "$string"
+IFS=', ' read -r -a tags <<< "{{.imageTag}}"
 
 for t in "${tags[@]}"; do
 
@@ -96,11 +81,7 @@ for t in "${tags[@]}"; do
 	set -e
 	echo " {{.dockerRegistry}}/$IMG:$TAG is pushed"
 
-	if [ "xtrue" == "x{{.dockerRMi}}" ]; then
-		docker rmi -f {{.dockerRegistry}}/$IMG:$TAG || true;
-	else
-		echo "docker rmi: {{.dockerRMi}}. So, built image is not deleted"
-	fi;
+	docker rmi -f {{.dockerRegistry}}/$IMG:$TAG || true;
 
 done
 
