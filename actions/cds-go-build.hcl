@@ -75,10 +75,10 @@ fi;
 
 cd ${GOPATH}/src/{{.package}}
 
-if [ "xtrue" == "x${{.runGoGet}}" ]; then
+if [ "xtrue" == "x{{.runGoGet}}" ]; then
 	go get -v
 else
-	echo "not running go get (${GO_GET})";
+	echo "not running go get ({{.runGoGet}})";
 fi;
 
 GOARGS=""
