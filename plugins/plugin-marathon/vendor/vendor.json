@@ -1,0 +1,71 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
+			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"revisionTime": "2016-06-15T09:26:46Z"
+		},
+		{
+			"checksumSHA1": "O/eUfUoi7lWgZiipUP939AAdKk4=",
+			"path": "github.com/donovanhide/eventsource",
+			"revision": "fd1de70867126402be23c306e1ce32828455d85b",
+			"revisionTime": "2016-05-25T20:46:10Z"
+		},
+		{
+			"checksumSHA1": "aIb20NobDZnQMGJzDAHh0fDuOEg=",
+			"path": "github.com/facebookgo/httpcontrol",
+			"revision": "ccde4420e1fee9af5da365cb76075b95683f39a6",
+			"revisionTime": "2015-07-08T23:40:01Z"
+		},
+		{
+			"checksumSHA1": "J8uwiPLiTGiVOu9MVaPF6/OFlvc=",
+			"path": "github.com/gambol99/go-marathon",
+			"revision": "e27d500d98ed82db699ec76a5e40dc3796e27657",
+			"revisionTime": "2016-12-20T20:28:31Z"
+		},
+		{
+			"checksumSHA1": "yyAzHoiVLu+xywYI2BDyRq6sOqE=",
+			"path": "github.com/google/go-querystring/query",
+			"revision": "9235644dd9e52eeae6fa48efd539fdc351a0af53",
+			"revisionTime": "2016-03-11T01:20:12Z"
+		},
+		{
+			"checksumSHA1": "Jh6jdEjDeajnpEG8xlrLrnYw210=",
+			"origin": "github.com/ovh/cds/vendor/github.com/hashicorp/go-plugin",
+			"path": "github.com/hashicorp/go-plugin",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
+		},
+		{
+			"checksumSHA1": "ZhK6IO2XN81Y+3RAjTcVm1Ic7oU=",
+			"origin": "github.com/ovh/cds/vendor/github.com/hashicorp/yamux",
+			"path": "github.com/hashicorp/yamux",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
+		},
+		{
+			"checksumSHA1": "a5VaDyfBgV7iX/05yZjM7gTIM2I=",
+			"path": "github.com/ovh/cds/sdk/plugin",
+			"revision": "77e794e5f564f80889643410f55fded0c17e59f6",
+			"revisionTime": "2016-12-23T10:22:36Z"
+		},
+		{
+			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
+			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"revisionTime": "2016-06-15T09:26:46Z"
+		},
+		{
+			"checksumSHA1": "iydUphwYqZRq3WhstEdGsbvBAKs=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
+			"revisionTime": "2016-06-15T09:26:46Z"
+		}
+	],
+	"rootPath": "github.com/ovh/cds-contrib/plugins/plugin-marathon"
+}
