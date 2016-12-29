@@ -64,8 +64,8 @@ steps = [{
 #!/bin/bash
 set -e
 
-export GOOS={{.os}}
-export GOARCH={{.architecture}}
+export GOOS="{{.os}}"
+export GOARCH="{{.architecture}}"
 
 if [ ! -d "${GOPATH}/src/{{.package}}" ]; then
   echo "directory '${GOPATH}/src/{{.package}}' does not exist"
