@@ -50,25 +50,22 @@ steps = [{
 set -e
 
 IMG=`echo {{.imageName}}| tr '[:upper:]' '[:lower:]'`
-TAG=`echo {{.imageTag}} | sed 's/\///g'`
-echo "Building ${IMG}:${TAG}"
+GENTAG="cds{{.cds.version}}"
+echo "Building {{.dockerRegistry}}/${IMG}:${GENTAG}"
 
 cd {{.dockerfileDirectory}}
-docker build {{.dockerOpts}} -t {{.dockerRegistry}}/$IMG:$TAG .
-
-EOF
-	}, {
-		script = <<EOF
-#!/bin/bash
+docker build {{.dockerOpts}} -t {{.dockerRegistry}}/$IMG:$GENTAG .
 
 IFS=', ' read -r -a tags <<< "{{.imageTag}}"
 
 for t in "${tags[@]}"; do
 
-	IMG=`echo {{.imageName}}| tr '[:upper:]' '[:lower:]'`
-	TAG=`echo ${t} | sed 's/\///g'`
+	set +e
 
-	echo "Pushing {{.dockerRegistry}}/$IMG:$TAG"
+	TAG=`echo ${t} | sed 's/\///g'`
+	docker tag {{.dockerRegistry}}/$IMG:$GENTAG {{.dockerRegistry}}/$IMG:$TAG
+
+    echo "Pushing {{.dockerRegistry}}/$IMG:$TAG"
 	docker push {{.dockerRegistry}}/$IMG:$TAG
 
 	if [ $? -ne 0 ]; then
@@ -82,8 +79,8 @@ for t in "${tags[@]}"; do
 	echo " {{.dockerRegistry}}/$IMG:$TAG is pushed"
 
 	docker rmi -f {{.dockerRegistry}}/$IMG:$TAG || true;
-
 done
+docker rmi -f {{.dockerRegistry}}/$IMG:$GENTAG || true;
 
 EOF
 	}]
