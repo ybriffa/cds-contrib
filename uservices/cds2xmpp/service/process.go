@@ -7,14 +7,15 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/mattn/go-xmpp"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
+
 	"github.com/ovh/cds/sdk"
 	"github.com/ovh/cds/sdk/event"
-	"github.com/spf13/viper"
 )
 
 var cdsbot *botClient
 
-const resource = "tat"
+const resource = "cds"
 
 type botClient struct {
 	creation   time.Time
@@ -53,14 +54,14 @@ func do() {
 func process(event sdk.Event) error {
 	var eventNotif sdk.EventNotif
 
-	if event.EventType == fmt.Sprintf("%T", sdk.EventNotif{}) {
-		if err := mapstructure.Decode(event.Payload, &eventNotif); err != nil {
-			log.Warnf("process> Error during consumption. type:%s err:%s", event.EventType, err)
-			return nil
-		}
-	} else {
-		// skip all event != eventNotif
+	// skip all event != eventNotif
+	if event.EventType != fmt.Sprintf("%T", sdk.EventNotif{}) {
 		log.Debugf("process> receive: type:%s - skipped", event.EventType)
+		return nil
+	}
+
+	if err := mapstructure.Decode(event.Payload, &eventNotif); err != nil {
+		log.Warnf("process> Error during consumption. type:%s err:%s", event.EventType, err)
 		return nil
 	}
 
