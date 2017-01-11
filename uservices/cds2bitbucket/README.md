@@ -1,3 +1,0 @@
-# CDS to Bitbucket
-
-
