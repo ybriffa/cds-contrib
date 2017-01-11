@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -69,6 +70,10 @@ If set, CDS will wait for all instances to be deployed until timeout is over. Al
 If not set, CDS will consider a successfull result if marathon accepts the provided configuration.`,
 		"true")
 
+	params.Add("insecureSkipVerify", plugin.BooleanParameter,
+		`Skip SSL Verify if you want to use self-signed certificate`,
+		"false")
+
 	params.Add("timeout", plugin.NumberParameter,
 		`Marathon deployment timeout (seconds). Used only if "waitForDeployment" is true. `,
 		"120")
@@ -84,6 +89,7 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	password := a.Arguments().Get("password")
 	tmplConf := a.Arguments().Get("configuration")
 	waitForDeploymentStr := a.Arguments().Get("waitForDeployment")
+	insecureSkipVerifyStr := a.Arguments().Get("insecureSkipVerify")
 	timeoutStr := a.Arguments().Get("timeout")
 
 	//Parse arguments
@@ -91,6 +97,16 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	if err != nil {
 		plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing waitForDeployment value : %s\n", err.Error())
 		return plugin.Fail
+	}
+
+	insecureSkipVerify := false
+	if insecureSkipVerifyStr != "" {
+		var errb error
+		insecureSkipVerify, errb = strconv.ParseBool(insecureSkipVerifyStr)
+		if err != nil {
+			plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing insecureSkipVerify value : %s\n", errb.Error())
+			return plugin.Fail
+		}
 	}
 
 	timeout, err := strconv.Atoi(timeoutStr)
@@ -102,8 +118,9 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	//Custom http client with 3 retries
 	httpClient := &http.Client{
 		Transport: &httpcontrol.Transport{
-			RequestTimeout: time.Minute,
-			MaxTries:       3,
+			RequestTimeout:  time.Minute,
+			MaxTries:        3,
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
 		},
 	}
 
@@ -295,10 +312,10 @@ func tmplApplicationConfigFile(a plugin.IAction, filepath string) (string, error
 
 func parseApplicationConfigFile(a plugin.IAction, f string) (*marathon.Application, error) {
 	//Read marathon.json
-	buff, err := ioutil.ReadFile(f)
-	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration file error : %s\n", err)
-		return nil, err
+	buff, errf := ioutil.ReadFile(f)
+	if errf != nil {
+		plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration file error : %s\n", errf)
+		return nil, errf
 	}
 
 	//Parse marathon.json
@@ -309,15 +326,15 @@ func parseApplicationConfigFile(a plugin.IAction, f string) (*marathon.Applicati
 	}
 
 	//Validate with official schema : https://mesosphere.github.io/marathon/docs/generated/api.html#v2_apps_post
-	wd, err := os.Getwd()
-	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error with working directory : %s\n", err)
-		return nil, err
+	wd, erro := os.Getwd()
+	if erro != nil {
+		plugin.SendLog(a, "PLUGIN-MARATHON", "Error with working directory : %s\n", erro)
+		return nil, erro
 	}
-	schemaPath, err := ioutil.TempFile(os.TempDir(), "marathon.schema")
-	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error marathon schema (%s) : %s\n", schemaPath.Name(), err)
-		return nil, err
+	schemaPath, errt := ioutil.TempFile(os.TempDir(), "marathon.schema")
+	if errt != nil {
+		plugin.SendLog(a, "PLUGIN-MARATHON", "Error marathon schema (%s) : %s\n", schemaPath.Name(), errt)
+		return nil, errt
 	}
 	defer os.RemoveAll(schemaPath.Name())
 
