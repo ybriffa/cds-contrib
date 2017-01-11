@@ -33,7 +33,7 @@ See [CDS documentation](https://github.com/ovh/cds) for more details.
 
 ## µServices
 
-- [cds2bitbucket](https://github.com/ovh/cds-contrib/tree/master/uservices/cds2bitbucket)
+- [cds2xmpp](https://github.com/ovh/cds-contrib/tree/master/uservices/cds2xmpp)
 - [cds2tat](https://github.com/ovh/cds-contrib/tree/master/uservices/cds2tat)
 
 ## Contributions
