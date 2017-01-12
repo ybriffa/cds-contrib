@@ -109,6 +109,10 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 		}
 	}
 
+	if insecureSkipVerify {
+		plugin.SendLog(a, "PLUGIN-MARATHON", "You are using insecureSkipVerify flag to true. It is not recommended\n")
+	}
+
 	timeout, err := strconv.Atoi(timeoutStr)
 	if err != nil {
 		plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing timeout value :  %s\n", err.Error())
