@@ -20,8 +20,9 @@ import (
 
 	"github.com/facebookgo/httpcontrol"
 	"github.com/gambol99/go-marathon"
-	"github.com/ovh/cds/sdk/plugin"
 	"github.com/xeipuuv/gojsonschema"
+
+	"github.com/ovh/cds/sdk/plugin"
 )
 
 //MarathonPlugin is our marathon plugin to manage app deployment
@@ -159,7 +160,21 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	if appConfig.Labels == nil {
 		appConfig.Labels = &map[string]string{}
 	}
+
 	(*appConfig.Labels)["CDS_VERSION"] = a.Arguments().Get("cds.version")
+	(*appConfig.Labels)["CDS_PROJECT"] = a.Arguments().Get("cds.project")
+	(*appConfig.Labels)["CDS_APPLICATION"] = a.Arguments().Get("cds.application")
+	(*appConfig.Labels)["CDS_ENVIRONMENT"] = a.Arguments().Get("cds.environment")
+
+	gitBranch := a.Arguments().Get("git.branch")
+	if gitBranch != "" {
+		(*appConfig.Labels)["CDS_GIT_BRANCH"] = gitBranch
+	}
+
+	gitHash := a.Arguments().Get("git.hash")
+	if gitHash != "" {
+		(*appConfig.Labels)["CDS_GIT_HASH"] = gitHash
+	}
 
 	plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration File %s: OK\n", tmplConf)
 
