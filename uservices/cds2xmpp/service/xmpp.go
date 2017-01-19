@@ -10,6 +10,13 @@ import (
 )
 
 func helloWorld() {
+	if viper.GetString("xmpp_hello_world") == "" {
+		log.Infof("helloWorld >> param xmpp-hello-world is empty")
+		return
+	}
+
+	log.Infof("helloWorld >> sending hello world to %s", viper.GetString("xmpp_hello_world"))
+
 	cdsbot.XMPPClient.Send(xmpp.Chat{
 		Remote: viper.GetString("xmpp_hello_world"),
 		Type:   "chat",
