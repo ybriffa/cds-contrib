@@ -10,6 +10,12 @@
 			"revisionTime": "2017-01-19T10:02:07Z"
 		},
 		{
+			"checksumSHA1": "dGXnnR7ZhsrZNnEqFimk6q7YCqs=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "61e43dc76f7ee59a82bdf3d71033dc12bea4c77d",
+			"revisionTime": "2017-01-13T01:19:11Z"
+		},
+		{
 			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
 			"origin": "github.com/ovh/cds/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
@@ -146,6 +152,12 @@
 			"revisionTime": "2017-01-19T10:02:07Z"
 		},
 		{
+			"checksumSHA1": "6DVd4tXfoer2bc5pcEVOj0bNf7w=",
+			"path": "github.com/itsjamie/gin-cors",
+			"revision": "97b4a9da79331dfa2b6d35f4cdd1e50f5148859c",
+			"revisionTime": "2016-04-20T13:07:02Z"
+		},
+		{
 			"checksumSHA1": "BM6ZlNJmtKy3GBoWwg2X55gnZ4A=",
 			"origin": "github.com/ovh/cds/vendor/github.com/klauspost/crc32",
 			"path": "github.com/klauspost/crc32",
@@ -177,6 +189,12 @@
 			"path": "github.com/mattn/go-isatty",
 			"revision": "30a891c33c7cde7b02a981314b4228ec99380cca",
 			"revisionTime": "2016-11-23T14:36:37Z"
+		},
+		{
+			"checksumSHA1": "ZnL9FwogYHcdpsbdQFTzgb4rF0I=",
+			"path": "github.com/mattn/go-xmpp",
+			"revision": "f4550b5399387339df5ce4c3f88c1ef85333bdd5",
+			"revisionTime": "2016-11-20T21:01:58Z"
 		},
 		{
 			"checksumSHA1": "UuXgD2dDojfS8AViUEe15gLIWZE=",
@@ -275,6 +293,12 @@
 			"revisionTime": "2017-01-19T10:02:07Z"
 		},
 		{
+			"checksumSHA1": "s/qchlUIU/4Ilo5BjPnb4M+bSU0=",
+			"path": "github.com/spf13/cobra",
+			"revision": "dc208f4211e7f6df7ec8cb62640f57d3e154910d",
+			"revisionTime": "2017-01-18T18:55:16Z"
+		},
+		{
 			"checksumSHA1": "dkruahfhuLXXuyeCuRpsWlcRK+8=",
 			"origin": "github.com/ovh/cds/vendor/github.com/spf13/jwalterweatherman",
 			"path": "github.com/spf13/jwalterweatherman",
@@ -282,11 +306,10 @@
 			"revisionTime": "2017-01-19T10:02:07Z"
 		},
 		{
-			"checksumSHA1": "GxPD7A0NjMDom1xte0mghkpzr0E=",
-			"origin": "github.com/ovh/cds/vendor/github.com/spf13/pflag",
+			"checksumSHA1": "azL5LwQ46tyRFejgGTvMmiE6vjA=",
 			"path": "github.com/spf13/pflag",
-			"revision": "8bcfc25c46ac1b1913b2165a831e50c561cd8d00",
-			"revisionTime": "2017-01-19T10:02:07Z"
+			"revision": "51268031d79952516489a9f8aa34e9709b98d946",
+			"revisionTime": "2017-01-16T16:32:51Z"
 		},
 		{
 			"checksumSHA1": "2EeKIC5kUssQK8g49DOa78FoMgs=",
