@@ -9,6 +9,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+func helloWorld() {
+	cdsbot.XMPPClient.Send(xmpp.Chat{
+		Remote: viper.GetString("xmpp_hello_world"),
+		Type:   "chat",
+		Text:   "Hello from cds2xmpp",
+	})
+}
+
 func serverName(host string) string {
 	return strings.Split(host, ":")[0]
 }
