@@ -53,6 +53,7 @@ func do() {
 
 func process(event sdk.Event) error {
 	var eventNotif sdk.EventNotif
+	log.Debugf("process> receive: type:%s", event.EventType)
 
 	// skip all event != eventNotif
 	if event.EventType != fmt.Sprintf("%T", sdk.EventNotif{}) {
@@ -68,6 +69,7 @@ func process(event sdk.Event) error {
 	log.Debugf("process> event:%+v", event)
 
 	for _, r := range eventNotif.Recipients {
+		log.Debugf("process> event send to :%s", r)
 		cdsbot.XMPPClient.Send(xmpp.Chat{
 			Remote: r,
 			Type:   "chat",
