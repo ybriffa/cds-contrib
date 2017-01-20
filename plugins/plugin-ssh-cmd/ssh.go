@@ -1,13 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
 	"golang.org/x/crypto/ssh"
-
-	"fmt"
 
 	"github.com/ovh/cds/sdk/plugin"
 )
@@ -35,7 +34,7 @@ func (s SSHCmdPlugin) Author() string {
 //Parameters return parameters description
 func (s SSHCmdPlugin) Parameters() plugin.Parameters {
 	params := plugin.NewParameters()
-	params.Add("username", plugin.StringParameter, "Username", "{{.cds.env.hostname}}")
+	params.Add("username", plugin.StringParameter, "Username", "{{.cds.env.username}}")
 	params.Add("privateKey", plugin.StringParameter, "SSH RSA private key", "{{.cds.app.key}}")
 	params.Add("hostnames", plugin.StringParameter, "Hostnames (comma separated values)", "{{.cds.env.hostnames}}")
 	params.Add("command", plugin.TextParameter, "Command", "echo \"Hello CDS !\"")
