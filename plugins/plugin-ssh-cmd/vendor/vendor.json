@@ -1,6 +1,6 @@
 {
 	"comment": "",
-	"ignore": "test",
+	"ignore": "test github.com/ovh/cds/sdk/plugin",
 	"package": [
 		{
 			"checksumSHA1": "aIb20NobDZnQMGJzDAHh0fDuOEg=",
@@ -20,12 +20,6 @@
 			"checksumSHA1": "ZhK6IO2XN81Y+3RAjTcVm1Ic7oU=",
 			"origin": "github.com/ovh/cds/vendor/github.com/hashicorp/yamux",
 			"path": "github.com/hashicorp/yamux",
-			"revision": "0f0a2d5c96f60c2a04a27d00dd6d72c42dd20836",
-			"revisionTime": "2017-01-20T10:37:16Z"
-		},
-		{
-			"checksumSHA1": "a5VaDyfBgV7iX/05yZjM7gTIM2I=",
-			"path": "github.com/ovh/cds/sdk/plugin",
 			"revision": "0f0a2d5c96f60c2a04a27d00dd6d72c42dd20836",
 			"revisionTime": "2017-01-20T10:37:16Z"
 		},
