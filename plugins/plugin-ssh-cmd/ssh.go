@@ -163,7 +163,6 @@ func (s SSHCmdPlugin) Run(a plugin.IAction) plugin.Result {
 	//Check errors
 	for _, e := range errs {
 		if e != nil {
-			plugin.SendLog(a, "PLUGIN", "%s\n", e)
 			return plugin.Fail
 		}
 	}
