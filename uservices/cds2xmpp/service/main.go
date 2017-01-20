@@ -121,6 +121,9 @@ func init() {
 
 	flags.Bool("xmpp-insecure-skip-verify", true, "XMPP InsecureSkipVerify")
 	viper.BindPFlag("xmpp_insecure_skip_verify", flags.Lookup("xmpp-insecure-skip-verify"))
+
+	flags.String("xmpp-default-hostname", "", "Default Hostname for user, enter your.jabber.net for @your.jabber.net")
+	viper.BindPFlag("xmpp_default_hostname", flags.Lookup("xmpp-default-hostname"))
 }
 
 func main() {

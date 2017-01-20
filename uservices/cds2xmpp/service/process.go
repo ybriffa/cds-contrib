@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -69,6 +70,9 @@ func process(event sdk.Event) error {
 	log.Debugf("process> event:%+v", event)
 
 	for _, r := range eventNotif.Recipients {
+		if !strings.Contains(r, "@") {
+			r += "@" + viper.GetString("xmpp_default_hostname")
+		}
 		log.Debugf("process> event send to :%s", r)
 		cdsbot.XMPPClient.Send(xmpp.Chat{
 			Remote: r,
