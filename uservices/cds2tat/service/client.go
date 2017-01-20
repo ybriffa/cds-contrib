@@ -25,16 +25,8 @@ func getClient() *tat.Client {
 		log.Errorf("Error while create new Tat Client:%s", err)
 	}
 
-	switch viper.GetString("log_level") {
-	case "debug":
-		tat.DebugLogFunc = log.Debugf
-	case "info":
-		tat.DebugLogFunc = log.Infof
-	case "error":
-		tat.DebugLogFunc = log.Warnf
-	default:
-		tat.DebugLogFunc = log.Debugf
-	}
+	tat.DebugLogFunc = log.Debugf
+	tat.ErrorLogFunc = log.Warnf
 
 	instance = tc
 	return instance
