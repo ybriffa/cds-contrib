@@ -79,6 +79,7 @@ func process(event sdk.Event) error {
 			Type:   "chat",
 			Text:   eventNotif.Subject + " " + eventNotif.Body,
 		})
+		time.Sleep(1 * time.Second)
 	}
 
 	return nil
