@@ -92,7 +92,7 @@ func (bot *botClient) receive() {
 		}
 		switch v := chat.(type) {
 		case xmpp.Chat:
-			fmt.Printf("receive> msg from xmpp :%+v\n", v)
+			log.Debugf("receive> msg from xmpp :%+v\n", v)
 		}
 	}
 }
