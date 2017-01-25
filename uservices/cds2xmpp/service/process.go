@@ -88,7 +88,10 @@ func (bot *botClient) receive() {
 	for {
 		chat, err := bot.XMPPClient.Recv()
 		if err != nil {
-			log.Errorf("receive >> err: %s", err)
+			if !strings.Contains(err.Error(), "EOF") {
+				log.Errorf("receive >> err: %s", err)
+			}
+
 		}
 		switch v := chat.(type) {
 		case xmpp.Chat:
