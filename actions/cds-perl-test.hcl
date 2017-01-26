@@ -42,7 +42,7 @@ EOF
 	}, {
 		final = true
 		artifactUpload = {
-				path = "results/resultsUnitsTests.xml"
+				path = "{{.testDirectory}}/results/resultsUnitsTests.xml"
 				tag = "{{.cds.version}}"
 	  }
 	}, {
