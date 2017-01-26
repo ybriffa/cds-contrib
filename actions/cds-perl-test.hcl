@@ -34,6 +34,7 @@ steps = [{
 
 set -e
 
+cd {{.testDirectory}}
 mkdir -p results
 prove -r --timer --formatter=TAP::Formatter::JUnit > results/resultsUnitsTests.xml
 
@@ -46,5 +47,5 @@ EOF
 	  }
 	}, {
 		final = true
-		jUnitReport = "results/resultsUnitsTests.xml"
+		jUnitReport = "{{.testDirectory}}/results/resultsUnitsTests.xml"
 	}]
