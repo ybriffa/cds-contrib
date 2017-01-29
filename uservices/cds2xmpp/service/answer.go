@@ -31,19 +31,21 @@ func (bot *botClient) answer(chat xmpp.Chat) {
 
 func (bot *botClient) prepareAnswer(text, short, remote string) string {
 	question := strings.TrimSpace(text[5:]) // remove '/cds ' or 'cds, '
-	if question == "help" {
+
+	switch question {
+	case "help":
 		return help()
-	} else if question == "cds2xmpp status" {
+	case "cds2xmpp status":
 		if bot.isAdmin(remote) {
 			return bot.getStatus()
 		}
 		return "forbidden for you " + remote
-	} else if question == "ping" {
+	case "ping":
 		return "pong"
-	} else if strings.HasPrefix(question, "hi") {
-		return "Hi!"
+	default:
+		return random()
 	}
-	return random()
+
 }
 
 func help() string {
