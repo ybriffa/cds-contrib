@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
 	"strings"
+	"text/template"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -87,30 +89,48 @@ func (bot *botClient) helloWorld() {
 
 }
 
-func (bot *botClient) getStatus() string {
-	return fmt.Sprintf(`
+const status = `
 CDS2XMPP Status
 
-Started:%s since %s
-Admin: %s
+Started:{{.creation}} since {{.since}}
+Admin: {{.admin}}
 
 XMPP:
-- sent: %d, errors: %d, errors after retry: %d
-- renew: %d
+- sent: {{.sent}}, errors: {{.nbXMPPErrors}}, errors after retry: {{.nbXMPPErrorsAfterRetry}}
+- renew: {{.nbRenew}}
 
 ----
 Bot:
-- answers: %d
+- answers: {{.nbXMPPAnswers}}
 
-`,
-		cdsbot.creation, time.Now().Sub(cdsbot.creation),
-		viper.GetString("admin_cds2xmpp"),
-		//-- xmpp
-		bot.nbXMPPSent, bot.nbXMPPErrors, bot.nbXMPPErrorsAfterRetry,
-		bot.nbRenew,
-		//-- bot
-		bot.nbXMPPAnswers,
-	)
+`
+
+func (bot *botClient) getStatus() string {
+
+	data := map[string]string{
+		"creation":               fmt.Sprintf("%s", cdsbot.creation),
+		"since":                  fmt.Sprintf("%s", time.Now().Sub(cdsbot.creation)),
+		"admin":                  viper.GetString("admin_cds2xmpp"),
+		"sent":                   fmt.Sprintf("%d", bot.nbXMPPSent),
+		"nbXMPPErrors":           fmt.Sprintf("%d", bot.nbXMPPErrors),
+		"nbXMPPErrorsAfterRetry": fmt.Sprintf("%d", bot.nbXMPPErrorsAfterRetry),
+		"nbRenew":                fmt.Sprintf("%d", bot.nbRenew),
+		"nbXMPPAnswers":          fmt.Sprintf("%d", bot.nbXMPPAnswers),
+	}
+
+	t, errp := template.New("status").Parse(status)
+	if errp != nil {
+		log.Errorf("getStatus> Error:%s", errp.Error())
+		return "Error while prepare status:" + errp.Error()
+	}
+
+	var buffer bytes.Buffer
+	if err := t.Execute(&buffer, data); err != nil {
+		log.Errorf("getStatus> Error:%s", errp.Error())
+		return "Error while prepare status (execute):" + err.Error()
+	}
+
+	return buffer.String()
 }
 
 func (bot *botClient) sendPresencesOnConfs() error {
@@ -159,11 +179,6 @@ func (bot *botClient) receive() {
 			if !isError {
 				bot.receiveMsg(v)
 			}
-
-			/* Code for presence case xmpp.Presence:
-			fmt.Printf("Receive pres from jabb :%s\n", v)
-			fmt.Println(v.From, v.Show)
-			*/
 		}
 	}
 }
@@ -186,12 +201,6 @@ func getTypeChat(s string) string {
 
 func (bot *botClient) receiveMsg(chat xmpp.Chat) {
 	log.Debugf("receiveMsg >> enter remote:%s text:%s", chat.Remote, chat.Text)
-	/*
-		chat.Stamp.Unix() contains... something wrong.
-		if chat.Stamp.Unix() < bot.creation.Unix() {
-			log.Debugf("receiveMsg >> exit, bot is starting... chat ts:%s, bot.creation:%s", chat.Stamp, bot.creation)
-			return
-		}*/
 	if time.Now().Add(-10*time.Second).Unix() < bot.creation.Unix() {
 		log.Debugf("receiveMsg >> exit, bot is starting... ")
 		return
