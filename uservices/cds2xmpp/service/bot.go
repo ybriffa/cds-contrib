@@ -81,7 +81,7 @@ func (bot *botClient) helloWorld() {
 		bot.chats <- xmpp.Chat{
 			Remote: a,
 			Type:   "chat",
-			Text:   fmt.Sprintf("Hi, I'm CDS2XMPP, what a good day to be alive. /cds status for more information"),
+			Text:   fmt.Sprintf("Hi, I'm CDS2XMPP, what a good day to be alive. /cds cds2xmpp status for more information"),
 		}
 	}
 

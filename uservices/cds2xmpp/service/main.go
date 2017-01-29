@@ -14,8 +14,6 @@ import (
 // VERSION ...
 const VERSION = "0.1.0"
 
-var admins []string
-
 var mainCmd = &cobra.Command{
 	Use: "cds2xmpp",
 	Run: func(cmd *cobra.Command, args []string) {

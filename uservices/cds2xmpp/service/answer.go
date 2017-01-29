@@ -36,7 +36,7 @@ func (bot *botClient) prepareAnswer(text, short, remote string) string {
 	if question == "help" {
 		return help()
 	} else if question == "cds2xmpp status" {
-		if isAdmin(remote) {
+		if bot.isAdmin(remote) {
 			return bot.getStatus()
 		}
 		return "forbidden for you " + remote
@@ -61,8 +61,8 @@ Simple request: "cds, ping"
 	return out + viper.GetString("more_help")
 }
 
-func isAdmin(r string) bool {
-	for _, a := range admins {
+func (bot *botClient) isAdmin(r string) bool {
+	for _, a := range bot.admins {
 		if strings.HasPrefix(r, a) {
 			return true
 		}
