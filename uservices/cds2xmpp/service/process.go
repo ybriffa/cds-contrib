@@ -14,30 +14,7 @@ import (
 	"github.com/ovh/cds/sdk/event"
 )
 
-var cdsbot *botClient
-
-const resource = "cds"
-
-type botClient struct {
-	creation   time.Time
-	XMPPClient *xmpp.Client
-}
-
-func born() error {
-	xClient, err := getNewXMPPClient()
-	if err != nil {
-		return fmt.Errorf("getClient >> error with getNewXMPPClient err:%s", err)
-	}
-
-	cdsbot = &botClient{
-		creation:   time.Now(),
-		XMPPClient: xClient,
-	}
-
-	go cdsbot.receive()
-
-	return nil
-}
+var conferences []string
 
 func do() {
 	event.ConsumeKafka(viper.GetString("event_kafka_broker_addresses"),
@@ -69,40 +46,37 @@ func process(event sdk.Event) error {
 
 	log.Debugf("process> event:%+v", event)
 
-	for _, r := range eventNotif.Recipients {
-		if !strings.Contains(r, "@") {
-			r += "@" + viper.GetString("xmpp_default_hostname")
+	for _, destination := range eventNotif.Recipients {
+		if !strings.Contains(destination, "@") {
+			destination += "@" + viper.GetString("xmpp_default_hostname")
 		}
-		log.Debugf("process> event send to :%s", r)
-		cdsbot.XMPPClient.Send(xmpp.Chat{
-			Remote: r,
-			Type:   "chat",
+		log.Debugf("process> event send to :%s", destination)
+
+		typeXMPP := getTypeChat(destination)
+
+		if typeXMPP == typeGroupChat {
+			presenceToSend := true
+			for _, c := range conferences {
+				if strings.HasPrefix(c, destination) {
+					presenceToSend = false
+				}
+			}
+
+			if presenceToSend {
+				log.Debugf("process> presenceToSend add :%s", destination)
+				conferences = append(conferences, destination)
+				cdsbot.sendPresencesOnConfs()
+				time.Sleep(30 * time.Second)
+			}
+		}
+
+		cdsbot.chats <- xmpp.Chat{
+			Remote: destination,
+			Type:   typeXMPP,
 			Text:   eventNotif.Subject + " " + eventNotif.Body,
-		})
-		time.Sleep(1 * time.Second)
+		}
+		cdsbot.nbXMPPSent++
 	}
 
 	return nil
-}
-
-func (bot *botClient) receive() {
-	for {
-		chat, err := bot.XMPPClient.Recv()
-		if err != nil {
-			if !strings.Contains(err.Error(), "EOF") {
-				log.Errorf("receive >> err: %s", err)
-			}
-
-		}
-		switch v := chat.(type) {
-		case xmpp.Chat:
-			if v.Remote != "" {
-				if v.Type == "error" {
-					log.Errorf("receive> msg error from xmpp :%+v\n", v)
-				} else {
-					log.Debugf("receive> msg from xmpp :%+v\n", v)
-				}
-			}
-		}
-	}
 }

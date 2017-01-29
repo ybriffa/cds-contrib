@@ -1,0 +1,98 @@
+package main
+
+import (
+	"math/rand"
+	"strings"
+
+	"github.com/mattn/go-xmpp"
+	"github.com/spf13/viper"
+)
+
+func (bot *botClient) answer(chat xmpp.Chat) {
+
+	typeXMPP := getTypeChat(chat.Remote)
+	remote := chat.Remote
+	to := chat.Remote
+	if typeXMPP == "groupchat" {
+		if strings.Contains(chat.Remote, "/") {
+			t := strings.Split(chat.Remote, "/")
+			remote = t[0]
+			to = t[1]
+		}
+	} else {
+		to = strings.Split(chat.Remote, "@")[0]
+	}
+
+	bot.chats <- xmpp.Chat{
+		Remote: remote,
+		Type:   typeXMPP,
+		Text:   to + ": " + bot.prepareAnswer(chat.Text, to, chat.Remote),
+	}
+	bot.nbXMPPAnswers++
+}
+
+func (bot *botClient) prepareAnswer(text, short, remote string) string {
+	question := strings.TrimSpace(text[5:]) // remove '/cds ' or 'cds, '
+	if question == "help" {
+		return help()
+	} else if question == "cds2xmpp status" {
+		if isAdmin(remote) {
+			return bot.getStatus()
+		}
+		return "forbidden for you " + remote
+	} else if question == "ping" {
+		return "pong"
+	} else if strings.HasPrefix(question, "hi") {
+		return "Hi!"
+	}
+	return random()
+}
+
+func help() string {
+	out := `
+Begin conversation with "cds," or "/cds"
+
+Simple request: "cds, ping"
+
+/cds cds2xmpp status (for admin only)
+
+`
+
+	return out + viper.GetString("more_help")
+}
+
+func isAdmin(r string) bool {
+	for _, a := range admins {
+		if strings.HasPrefix(r, a) {
+			return true
+		}
+	}
+	return false
+}
+
+func random() string {
+	answers := []string{
+		"It is certain",
+		"It is decidedly so",
+		"Without a doubt",
+		"Yes definitely",
+		"You may rely on it",
+		"As I see it yes",
+		"Most likely",
+		"Outlook good",
+		"Yes",
+		"Signs point to yes",
+		"Reply hazy try again",
+		"Ask again later",
+		"Better not tell you now",
+		"Cannot predict now",
+		"Concentrate and ask again",
+		"Don't count on it",
+		"My reply is no",
+		"My sources say no",
+		"Outlook not so good",
+		"Very doubtful",
+		"Nooooo",
+	}
+	return answers[rand.Intn(len(answers))]
+}
