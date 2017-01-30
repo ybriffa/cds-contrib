@@ -6,7 +6,8 @@ import (
 	"strconv"
 
 	"gopkg.in/urfave/cli.v1"
-	"github.com/ovh/cds-contrib/plugin-kafka-publish/kafkapublisher"
+
+	"github.com/ovh/cds-contrib/plugins/plugin-kafka-publish/kafkapublisher"
 )
 
 func sendAction(c *cli.Context) error {

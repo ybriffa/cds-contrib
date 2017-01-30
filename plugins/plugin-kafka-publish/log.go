@@ -12,6 +12,6 @@ func Logf(format string, args ...interface{}) {
 	if !strings.HasSuffix(format, "\n") {
 		format = format + "\n"
 	}
-	plugin.SendLog(action, "PLUGIN-KAFKA-PUBLISH", format, args...)
+	plugin.SendLog(job, "PLUGIN-KAFKA-PUBLISH", format, args...)
 	log.Printf(format, args...)
 }
