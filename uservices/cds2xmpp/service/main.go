@@ -123,6 +123,9 @@ func init() {
 	flags.Bool("xmpp-session", true, "XMPP Session")
 	viper.BindPFlag("xmpp_session", flags.Lookup("xmpp-session"))
 
+	flags.Bool("force-dot", true, "If destination (execpt conference) does not contains '.' skip destination")
+	viper.BindPFlag("force_dot", flags.Lookup("force-dot"))
+
 	flags.Bool("xmpp-insecure-skip-verify", true, "XMPP InsecureSkipVerify")
 	viper.BindPFlag("xmpp_insecure_skip_verify", flags.Lookup("xmpp-insecure-skip-verify"))
 

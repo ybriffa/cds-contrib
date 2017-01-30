@@ -47,31 +47,34 @@ func process(event sdk.Event) error {
 	log.Debugf("process> event:%+v", event)
 
 	for _, destination := range eventNotif.Recipients {
+		fullDestination := destination
 		if !strings.Contains(destination, "@") {
-			destination += "@" + viper.GetString("xmpp_default_hostname")
+			fullDestination += "@" + viper.GetString("xmpp_default_hostname")
 		}
-		log.Debugf("process> event send to :%s", destination)
+		log.Debugf("process> event send to :%s", fullDestination)
 
-		typeXMPP := getTypeChat(destination)
+		typeXMPP := getTypeChat(fullDestination)
 
 		if typeXMPP == typeGroupChat {
 			presenceToSend := true
 			for _, c := range conferences {
-				if strings.HasPrefix(c, destination) {
+				if strings.HasPrefix(c, fullDestination) {
 					presenceToSend = false
 				}
 			}
 
 			if presenceToSend {
-				log.Debugf("process> presenceToSend add :%s", destination)
-				conferences = append(conferences, destination)
+				log.Debugf("process> presenceToSend add :%s", fullDestination)
+				conferences = append(conferences, fullDestination)
 				cdsbot.sendPresencesOnConfs()
 				time.Sleep(30 * time.Second)
 			}
+		} else if viper.GetBool("force_dot") && !strings.Contains(destination, ".") {
+			continue
 		}
 
 		cdsbot.chats <- xmpp.Chat{
-			Remote: destination,
+			Remote: fullDestination,
 			Type:   typeXMPP,
 			Text:   eventNotif.Subject + " " + eventNotif.Body,
 		}
