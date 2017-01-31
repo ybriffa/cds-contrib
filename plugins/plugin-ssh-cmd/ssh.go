@@ -44,7 +44,7 @@ func (s SSHCmdPlugin) Parameters() plugin.Parameters {
 }
 
 //Run execute the action
-func (s SSHCmdPlugin) Run(a plugin.IAction) plugin.Result {
+func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 	//Parse parameters
 	buf := []byte(a.Arguments().Get("privateKey"))
 	user := a.Arguments().Get("username")

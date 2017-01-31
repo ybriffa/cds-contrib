@@ -49,7 +49,7 @@ func (t *TemplatePlain) Parameters() []sdk.TemplateParam {
 	return []sdk.TemplateParam{
 		{
 			Name:        "repo",
-			Type:        sdk.StringVariable,
+			Type:        sdk.RepositoryVariable,
 			Value:       "",
 			Description: "Your source code repository",
 		},
@@ -85,26 +85,28 @@ func (t *TemplatePlain) Apply(opts template.IApplyOptions) (sdk.Application, err
 	/* Build Pipeline */
 	/* Build Pipeline - Commit Stage */
 
-	jobCompile := sdk.Action{
-		Name: "Compile",
-		Actions: []sdk.Action{
-			sdk.Action{
-				Name: "CDS_GitClone",
-			},
-			sdk.NewActionScript(`#!/bin/bash
+	jobCompile := sdk.Job{
+		Action: sdk.Action{
+			Name: "Compile",
+			Actions: []sdk.Action{
+				sdk.Action{
+					Name: "CDS_GitClone",
+				},
+				sdk.NewActionScript(`#!/bin/bash
 
 set -xe
 
 cd $(ls -1) && make`,
 
-				[]sdk.Requirement{
-					{
-						Name:  "make",
-						Type:  sdk.BinaryRequirement,
-						Value: "make",
+					[]sdk.Requirement{
+						{
+							Name:  "make",
+							Type:  sdk.BinaryRequirement,
+							Value: "make",
+						},
 					},
-				},
-			),
+				),
+			},
 		},
 	}
 
@@ -112,31 +114,33 @@ cd $(ls -1) && make`,
 		Name:       "Commit Stage",
 		BuildOrder: 0,
 		Enabled:    true,
-		Actions:    []sdk.Action{jobCompile},
+		Jobs:       []sdk.Job{jobCompile},
 	}
 
 	/* Build Pipeline - Packaging Stage */
 
-	jobDockerPackage := sdk.Action{
-		Name: "Docker package",
-		Actions: []sdk.Action{
-			sdk.Action{
-				Name: "CDS_GitClone",
-			},
-			sdk.NewActionScript(`#!/bin/bash
+	jobDockerPackage := sdk.Job{
+		Action: sdk.Action{
+			Name: "Docker package",
+			Actions: []sdk.Action{
+				sdk.Action{
+					Name: "CDS_GitClone",
+				},
+				sdk.NewActionScript(`#!/bin/bash
 set -ex
 
 cd $(ls -1)
 
 docker build -t cds/{{.cds.application}}-{{.cds.version}} .
 docker push cds/{{.cds.application}}-{{.cds.version}}`, []sdk.Requirement{
-				{
-					Name:  "bash",
-					Type:  sdk.BinaryRequirement,
-					Value: "bash",
+					{
+						Name:  "bash",
+						Type:  sdk.BinaryRequirement,
+						Value: "bash",
+					},
 				},
+				),
 			},
-			),
 		},
 	}
 
@@ -144,26 +148,28 @@ docker push cds/{{.cds.application}}-{{.cds.version}}`, []sdk.Requirement{
 		Name:       "Packaging Stage",
 		BuildOrder: 0,
 		Enabled:    true,
-		Actions:    []sdk.Action{jobDockerPackage},
+		Jobs:       []sdk.Job{jobDockerPackage},
 	}
 
 	/* Deploy Pipeline */
 	/* Deploy Pipeline - Deploy Stage */
 
-	jobDeploy := sdk.Action{
-		Name: "Deploy",
-		Actions: []sdk.Action{
-			sdk.NewActionScript(`#!/bin/bash
+	jobDeploy := sdk.Job{
+		Action: sdk.Action{
+			Name: "Deploy",
+			Actions: []sdk.Action{
+				sdk.NewActionScript(`#!/bin/bash
 set -ex
 
 echo "CALL YOUR DEPLOY SCRIPT HERE"`, []sdk.Requirement{
-				{
-					Name:  "docker",
-					Type:  sdk.BinaryRequirement,
-					Value: "docker",
+					{
+						Name:  "docker",
+						Type:  sdk.BinaryRequirement,
+						Value: "docker",
+					},
 				},
+				),
 			},
-			),
 		},
 	}
 
@@ -171,7 +177,7 @@ echo "CALL YOUR DEPLOY SCRIPT HERE"`, []sdk.Requirement{
 		Name:       "Deploy Stage",
 		BuildOrder: 0,
 		Enabled:    true,
-		Actions:    []sdk.Action{jobDeploy},
+		Jobs:       []sdk.Job{jobDeploy},
 	}
 
 	/* Assemble Pipeline */

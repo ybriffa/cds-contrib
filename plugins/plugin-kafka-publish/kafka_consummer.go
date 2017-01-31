@@ -10,7 +10,8 @@ import (
 	"strconv"
 
 	"github.com/Shopify/sarama"
-	"github.com/ovh/cds-contrib/plugin-kafka-publish/kafkapublisher"
+
+	"github.com/ovh/cds-contrib/plugins/plugin-kafka-publish/kafkapublisher"
 )
 
 func consumeFromKafka(kafka, topic, group, key string) error {

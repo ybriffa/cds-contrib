@@ -10,33 +10,33 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ovh/cds-contrib/plugin-kafka-publish/kafkapublisher"
+	"github.com/ovh/cds-contrib/plugins/plugin-kafka-publish/kafkapublisher"
 	"github.com/ovh/cds/sdk/plugin"
 )
 
 var (
 	version = "0.1"
-	action  plugin.IAction
+	job  plugin.IJob
 )
 
 //Run execute the action
-func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
-	action = a
-	kafka := action.Arguments().Get("kafkaAddresses")
-	key := action.Arguments().Get("kafkaKey")
-	topic := action.Arguments().Get("topic")
+func (m KafkaPlugin) Run(j plugin.IJob) plugin.Result {
+	job = j
+	kafka := job.Arguments().Get("kafkaAddresses")
+	key := job.Arguments().Get("kafkaKey")
+	topic := job.Arguments().Get("topic")
 
 	if key == "" || kafka == "" || topic == "" {
 		Logf("Kafka is not configured")
 		return plugin.Fail
 	}
 
-	waitForAckString := action.Arguments().Get("waitForAck")
+	waitForAckString := job.Arguments().Get("waitForAck")
 	var ackTopic string
 	var timeout int
 	if waitForAckString == "true" {
-		ackTopic = action.Arguments().Get("waitForAckTopic")
-		timeoutStr := action.Arguments().Get("waitForAckTimeout")
+		ackTopic = job.Arguments().Get("waitForAckTopic")
+		timeoutStr := job.Arguments().Get("waitForAckTimeout")
 
 		timeout, _ = strconv.Atoi(timeoutStr)
 		if ackTopic == "" && timeout == 0 {
@@ -46,14 +46,14 @@ func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
 
 	}
 
-	message := action.Arguments().Get("message")
-	messageFile, err := tmplMessage(action, []byte(message))
+	message := job.Arguments().Get("message")
+	messageFile, err := tmplMessage(job, []byte(message))
 	if err != nil {
 		return plugin.Fail
 	}
 
 	//Check if every file exist
-	artifactsList := action.Arguments().Get("artifacts")
+	artifactsList := job.Arguments().Get("artifacts")
 	artifacts := strings.Split(artifactsList, ",")
 	for _, f := range artifacts {
 		if _, err := os.Stat(f); os.IsNotExist(err) {
@@ -66,7 +66,7 @@ func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
 	files = append(files, artifacts...)
 
 	//Send the context message
-	ctx := kafkapublisher.NewContext(action.ID(), files)
+	ctx := kafkapublisher.NewContext(job.ID(), files)
 
 	producer, err := initKafkaProducer(kafka, key)
 	if err != nil {
@@ -85,7 +85,7 @@ func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
 		return plugin.Fail
 	}
 
-	pubKey := action.Arguments().Get("publicKey")
+	pubKey := job.Arguments().Get("publicKey")
 
 	//Send all the files
 	for _, f := range files {
@@ -135,7 +135,7 @@ func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
 	defer ticker.Stop()
 
 	//Wait for ack
-	ack, err := ackFromKafka(kafka, ackTopic, "cds", key, time.Duration(timeout)*time.Second, action.ID())
+	ack, err := ackFromKafka(kafka, ackTopic, "cds", key, time.Duration(timeout)*time.Second, job.ID())
 	if err != nil {
 		Logf("Failed to get ack on topic %s: %s", ackTopic, err)
 		return plugin.Fail
@@ -151,10 +151,10 @@ func (m KafkaPlugin) Run(a plugin.IAction) plugin.Result {
 	return plugin.Fail
 }
 
-func tmplMessage(a plugin.IAction, buff []byte) (string, error) {
+func tmplMessage(j plugin.IJob, buff []byte) (string, error) {
 	fileContent := string(buff)
 	data := map[string]string{}
-	for k, v := range a.Arguments().Data {
+	for k, v := range j.Arguments().Data {
 		kb := strings.Replace(k, ".", "__", -1)
 		data[kb] = v
 		re := regexp.MustCompile("{{." + k + "(.*)}}")

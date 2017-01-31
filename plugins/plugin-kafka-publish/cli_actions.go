@@ -6,10 +6,9 @@ import (
 	"io/ioutil"
 
 	"github.com/bgentry/speakeasy"
-
-	"github.com/ovh/cds-contrib/plugin-kafka-publish/kafkapublisher"
-
 	"gopkg.in/urfave/cli.v1"
+
+	"github.com/ovh/cds-contrib/plugins/plugin-kafka-publish/kafkapublisher"
 )
 
 //This shows the help
@@ -106,7 +105,7 @@ func ackAction(c *cli.Context) error {
 		if err != nil {
 			return cli.NewExitError(err.Error(), 41)
 		}
-		if len(logsBody) > 700 * 1024 {
+		if len(logsBody) > 700*1024 {
 			return cli.NewExitError("Log file too large. Limit is up to 700 ko", 41)
 		}
 	}

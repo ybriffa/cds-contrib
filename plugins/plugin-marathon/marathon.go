@@ -83,7 +83,7 @@ If not set, CDS will consider a successfull result if marathon accepts the provi
 }
 
 //Run execute the action
-func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
+func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 	//Get arguments
 	URL := a.Arguments().Get("url")
 	user := a.Arguments().Get("user")
@@ -278,7 +278,7 @@ func (m MarathonPlugin) Run(a plugin.IAction) plugin.Result {
 	return plugin.Success
 }
 
-func tmplApplicationConfigFile(a plugin.IAction, filepath string) (string, error) {
+func tmplApplicationConfigFile(a plugin.IJob, filepath string) (string, error) {
 	//Read marathon.json
 	buff, err := ioutil.ReadFile(filepath)
 	if err != nil {
@@ -329,7 +329,7 @@ func tmplApplicationConfigFile(a plugin.IAction, filepath string) (string, error
 	return outPath, nil
 }
 
-func parseApplicationConfigFile(a plugin.IAction, f string) (*marathon.Application, error) {
+func parseApplicationConfigFile(a plugin.IJob, f string) (*marathon.Application, error) {
 	//Read marathon.json
 	buff, errf := ioutil.ReadFile(f)
 	if errf != nil {
