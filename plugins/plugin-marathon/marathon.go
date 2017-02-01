@@ -96,7 +96,7 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 	//Parse arguments
 	waitForDeployment, err := strconv.ParseBool(waitForDeploymentStr)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing waitForDeployment value : %s\n", err.Error())
+		plugin.SendLog(a, "Error parsing waitForDeployment value : %s\n", err.Error())
 		return plugin.Fail
 	}
 
@@ -105,18 +105,18 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 		var errb error
 		insecureSkipVerify, errb = strconv.ParseBool(insecureSkipVerifyStr)
 		if err != nil {
-			plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing insecureSkipVerify value : %s\n", errb.Error())
+			plugin.SendLog(a, "Error parsing insecureSkipVerify value : %s\n", errb.Error())
 			return plugin.Fail
 		}
 	}
 
 	if insecureSkipVerify {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "You are using insecureSkipVerify flag to true. It is not recommended\n")
+		plugin.SendLog(a, "You are using insecureSkipVerify flag to true. It is not recommended\n")
 	}
 
 	timeout, err := strconv.Atoi(timeoutStr)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error parsing timeout value :  %s\n", err.Error())
+		plugin.SendLog(a, "Error parsing timeout value :  %s\n", err.Error())
 		return plugin.Fail
 	}
 
@@ -129,7 +129,7 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 		},
 	}
 
-	plugin.SendLog(a, "PLUGIN-MARATHON", "Connecting on %s\n", URL)
+	plugin.SendLog(a, "Connecting on %s\n", URL)
 	config := marathon.NewDefaultConfig()
 	config.URL = URL
 	config.HTTPBasicAuthUser = user
@@ -139,7 +139,7 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 	//Connecting to marathon
 	client, err := marathon.NewClient(config)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Connection failed on %s\n", URL)
+		plugin.SendLog(a, "Connection failed on %s\n", URL)
 		return plugin.Fail
 	}
 
@@ -176,13 +176,13 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 		(*appConfig.Labels)["CDS_GIT_HASH"] = gitHash
 	}
 
-	plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration File %s: OK\n", tmplConf)
+	plugin.SendLog(a, "Configuration File %s: OK\n", tmplConf)
 
 	//Searching for application
 	val := url.Values{"id": []string{appConfig.ID}}
 	applications, err := client.Applications(val)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Failed to list applications : %s\n", err.Error())
+		plugin.SendLog(a, "Failed to list applications : %s\n", err.Error())
 		return plugin.Fail
 	}
 
@@ -194,16 +194,16 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 	//Update or create application
 	if appExists {
 		if _, err := client.UpdateApplication(appConfig, true); err != nil {
-			plugin.SendLog(a, "PLUGIN-MARATHON", "Application %s update failed:%s\n", appConfig.ID, err)
+			plugin.SendLog(a, "Application %s update failed:%s\n", appConfig.ID, err)
 			return plugin.Fail
 		}
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Application updated %s: OK\n", appConfig.ID)
+		plugin.SendLog(a, "Application updated %s: OK\n", appConfig.ID)
 	} else {
 		if _, err := client.CreateApplication(appConfig); err != nil {
-			plugin.SendLog(a, "PLUGIN-MARATHON", "Application %S creation failed :%s\n", appConfig.ID, err)
+			plugin.SendLog(a, "Application %S creation failed :%s\n", appConfig.ID, err)
 			return plugin.Fail
 		}
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Application creation %s: OK\n", appConfig.ID)
+		plugin.SendLog(a, "Application creation %s: OK\n", appConfig.ID)
 	}
 
 	//Check deployments
@@ -213,14 +213,14 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 			t0 := time.Now()
 			for t := range ticker.C {
 				delta := math.Floor(t.Sub(t0).Seconds())
-				plugin.SendLog(a, "PLUGIN-MARATHON", "Application %s deployment in progress [%d seconds] please wait...\n", appConfig.ID, int(delta))
+				plugin.SendLog(a, "Application %s deployment in progress [%d seconds] please wait...\n", appConfig.ID, int(delta))
 			}
 		}()
 
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Application %s deployment in progress please wait...\n", appConfig.ID)
+		plugin.SendLog(a, "Application %s deployment in progress please wait...\n", appConfig.ID)
 		deployments, err := client.ApplicationDeployments(appConfig.ID)
 		if err != nil {
-			plugin.SendLog(a, "PLUGIN-MARATHON", "Failed to list deployments : %s\n", err.Error())
+			plugin.SendLog(a, "Failed to list deployments : %s\n", err.Error())
 			ticker.Stop()
 			return plugin.Fail
 		}
@@ -243,14 +243,14 @@ func (m MarathonPlugin) Run(a plugin.IJob) plugin.Result {
 				}()
 
 				if err := client.WaitOnDeployment(id, time.Duration(timeout)*time.Second); err != nil {
-					plugin.SendLog(a, "PLUGIN-MARATHON", "Error on deployment %s: %s\n", id, err.Error())
+					plugin.SendLog(a, "Error on deployment %s: %s\n", id, err.Error())
 					ticker.Stop()
 					successChan <- false
 					wg.Done()
 					return
 				}
 
-				plugin.SendLog(a, "PLUGIN-MARATHON", "Deployment %s succeeded", id)
+				plugin.SendLog(a, "Deployment %s succeeded", id)
 				ticker.Stop()
 				successChan <- true
 				wg.Done()
@@ -282,7 +282,7 @@ func tmplApplicationConfigFile(a plugin.IJob, filepath string) (string, error) {
 	//Read marathon.json
 	buff, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration file error : %s\n", err)
+		plugin.SendLog(a, "Configuration file error : %s\n", err)
 		return "", err
 	}
 
@@ -311,18 +311,18 @@ func tmplApplicationConfigFile(a plugin.IJob, filepath string) (string, error) {
 
 	t, err := template.New("file").Funcs(funcMap).Parse(fileContent)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Invalid template format: %s\n", err.Error())
+		plugin.SendLog(a, "Invalid template format: %s\n", err.Error())
 		return "", err
 	}
 
 	out, err := ioutil.TempFile(os.TempDir(), "marathon.json")
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error writing temporary file : %s\n", err.Error())
+		plugin.SendLog(a, "Error writing temporary file : %s\n", err.Error())
 		return "", err
 	}
 	outPath := out.Name()
 	if err := t.Execute(out, data); err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Failed to execute template: %s\n", err.Error())
+		plugin.SendLog(a, "Failed to execute template: %s\n", err.Error())
 		return "", err
 	}
 
@@ -333,32 +333,32 @@ func parseApplicationConfigFile(a plugin.IJob, f string) (*marathon.Application,
 	//Read marathon.json
 	buff, errf := ioutil.ReadFile(f)
 	if errf != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration file error : %s\n", errf)
+		plugin.SendLog(a, "Configuration file error : %s\n", errf)
 		return nil, errf
 	}
 
 	//Parse marathon.json
 	appConfig := &marathon.Application{}
 	if err := json.Unmarshal(buff, appConfig); err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Configuration file parse error : %s\n", err)
+		plugin.SendLog(a, "Configuration file parse error : %s\n", err)
 		return nil, err
 	}
 
 	//Validate with official schema : https://mesosphere.github.io/marathon/docs/generated/api.html#v2_apps_post
 	wd, erro := os.Getwd()
 	if erro != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error with working directory : %s\n", erro)
+		plugin.SendLog(a, "Error with working directory : %s\n", erro)
 		return nil, erro
 	}
 	schemaPath, errt := ioutil.TempFile(os.TempDir(), "marathon.schema")
 	if errt != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error marathon schema (%s) : %s\n", schemaPath.Name(), errt)
+		plugin.SendLog(a, "Error marathon schema (%s) : %s\n", schemaPath.Name(), errt)
 		return nil, errt
 	}
 	defer os.RemoveAll(schemaPath.Name())
 
 	if err := ioutil.WriteFile(schemaPath.Name(), []byte(schema), 0644); err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Error marathon schema : %s\n", err)
+		plugin.SendLog(a, "Error marathon schema : %s\n", err)
 		return nil, err
 	}
 
@@ -372,13 +372,13 @@ func parseApplicationConfigFile(a plugin.IJob, f string) (*marathon.Application,
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "Unable to validate document %s\n", err)
+		plugin.SendLog(a, "Unable to validate document %s\n", err)
 		return nil, err
 	}
 	if !result.Valid() {
-		plugin.SendLog(a, "PLUGIN-MARATHON", "The document is not valid. see following errors\n")
+		plugin.SendLog(a, "The document is not valid. see following errors\n")
 		for _, desc := range result.Errors() {
-			plugin.SendLog(a, "PLUGIN-MARATHON", " - %s", desc.Details())
+			plugin.SendLog(a, " - %s", desc.Details())
 		}
 		return nil, fmt.Errorf("IMarathonPluginnvalid json document")
 	}

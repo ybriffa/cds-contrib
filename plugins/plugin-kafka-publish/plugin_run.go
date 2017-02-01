@@ -16,7 +16,7 @@ import (
 
 var (
 	version = "0.1"
-	job  plugin.IJob
+	job     plugin.IJob
 )
 
 //Run execute the action

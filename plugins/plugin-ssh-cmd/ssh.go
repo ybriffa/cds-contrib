@@ -55,13 +55,13 @@ func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 
 	timeout, err := strconv.ParseFloat(timeoutS, 64)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN", "Error parsing timeout value %s : %s", timeoutS, err)
+		plugin.SendLog(a, "Error parsing timeout value %s : %s", timeoutS, err)
 		return plugin.Fail
 	}
 
 	cmdTimeout, err := strconv.ParseFloat(cmdTimeoutS, 64)
 	if err != nil {
-		plugin.SendLog(a, "PLUGIN", "Error parsing commandTimeout value %s : %s", cmdTimeoutS, err)
+		plugin.SendLog(a, "Error parsing commandTimeout value %s : %s", cmdTimeoutS, err)
 		return plugin.Fail
 	}
 
@@ -88,14 +88,14 @@ func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 		//Dialing server
 		client, err := ssh.Dial("tcp", host, sshConfig)
 		if err != nil {
-			plugin.SendLog(a, "PLUGIN", "Error dialing %s : %s\n", host, err)
+			plugin.SendLog(a, "Error dialing %s : %s\n", host, err)
 			errs[host] = err
 			continue
 		}
 		//Start session
 		session, err := client.NewSession()
 		if err != nil {
-			plugin.SendLog(a, "PLUGIN", "Error connecting %s@%s : %s\n", user, host, err)
+			plugin.SendLog(a, "Error connecting %s@%s : %s\n", user, host, err)
 			errs[host] = err
 			continue
 		}
@@ -126,12 +126,12 @@ func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 		case <-timeout:
 			if err != nil {
 				err := fmt.Errorf("Command timeout")
-				plugin.SendLog(a, "PLUGIN", "Error executing command on %s : %s\n", host, err)
+				plugin.SendLog(a, "Error executing command on %s : %s\n", host, err)
 				errs[host] = err
 			}
 		case err := <-errChan:
 			if err != nil {
-				plugin.SendLog(a, "PLUGIN", "Error executing command on %s : %s\n", host, err)
+				plugin.SendLog(a, "Error executing command on %s : %s\n", host, err)
 				errs[host] = err
 			}
 		case out := <-outChan:
@@ -145,7 +145,7 @@ func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 
 		//Close client
 		if err := client.Close(); err != nil {
-			plugin.SendLog(a, "PLUGIN", "Error closing connection on %s : %s\n", host, err)
+			plugin.SendLog(a, "Error closing connection on %s : %s\n", host, err)
 			errs[host] = err
 			continue
 		}
@@ -154,10 +154,10 @@ func (s SSHCmdPlugin) Run(a plugin.IJob) plugin.Result {
 	//Print outputs
 	for h, out := range outs {
 		if len(out) == 0 {
-			plugin.SendLog(a, "PLUGIN", "Results %s : Not output ---\n", h)
+			plugin.SendLog(a, "Results %s : Not output ---\n", h)
 			continue
 		}
-		plugin.SendLog(a, "PLUGIN", "Results %s : \n---BEGIN---\n%s\n---END---\n", h, string(out))
+		plugin.SendLog(a, "Results %s : \n---BEGIN---\n%s\n---END---\n", h, string(out))
 	}
 
 	//Check errors
