@@ -56,18 +56,19 @@ var mainCmd = &cobra.Command{
 			MaxHeaderBytes: 1 << 20,
 		}
 
-		log.Infof("Running cds2xmpp on %s", viper.GetString("listen_port"))
-
-		if err := born(); err != nil {
-			log.Fatalf("Error while initialize cds bot: %s", err)
+		var err error
+		cdsbot, err = getBotClient()
+		if err != nil {
+			log.Fatalf("Error while initialize client err:%s", err)
 		}
-		go do()
 
-		helloWorld()
+		go cdsbot.born()
 
+		log.Infof("Running cds2xmpp on %s", viper.GetString("listen_port"))
 		if err := s.ListenAndServe(); err != nil {
 			log.Errorf("Error while running ListenAndServe: %s", err.Error())
 		}
+
 	},
 }
 
@@ -104,8 +105,11 @@ func init() {
 	flags.String("xmpp-bot-password", "", "XMPP Bot Password")
 	viper.BindPFlag("xmpp_bot_password", flags.Lookup("xmpp-bot-password"))
 
-	flags.String("xmpp-hello-world", "", "Sending Hello World message to this jabber id")
-	viper.BindPFlag("xmpp_hello_world", flags.Lookup("xmpp-hello-world"))
+	flags.String("admin-cds2xmpp", "", "Admin cds2xmpp admina@jabber.yourdomain.net,adminb@jabber.yourdomain.net,")
+	viper.BindPFlag("admin_cds2xmpp", flags.Lookup("admin-cds2xmpp"))
+
+	flags.String("admin-conference", "", "CDS Admin conference cds@conference.jabber.yourdomain.net")
+	viper.BindPFlag("admin_conference", flags.Lookup("admin-conference"))
 
 	flags.Bool("xmpp-debug", false, "XMPP Debug")
 	viper.BindPFlag("xmpp_debug", flags.Lookup("xmpp-debug"))
@@ -119,11 +123,20 @@ func init() {
 	flags.Bool("xmpp-session", true, "XMPP Session")
 	viper.BindPFlag("xmpp_session", flags.Lookup("xmpp-session"))
 
+	flags.Bool("force-dot", true, "If destination (except conference) does not contains '.' skip destination")
+	viper.BindPFlag("force_dot", flags.Lookup("force-dot"))
+
 	flags.Bool("xmpp-insecure-skip-verify", true, "XMPP InsecureSkipVerify")
 	viper.BindPFlag("xmpp_insecure_skip_verify", flags.Lookup("xmpp-insecure-skip-verify"))
 
 	flags.String("xmpp-default-hostname", "", "Default Hostname for user, enter your.jabber.net for @your.jabber.net")
 	viper.BindPFlag("xmpp_default_hostname", flags.Lookup("xmpp-default-hostname"))
+
+	flags.Int("xmpp-delay", 5, "Delay between two sent messages")
+	viper.BindPFlag("xmpp_delay", flags.Lookup("xmpp-delay"))
+
+	flags.String("more-help", "", "Text added on /cds help")
+	viper.BindPFlag("more_help", flags.Lookup("more-help"))
 }
 
 func main() {
