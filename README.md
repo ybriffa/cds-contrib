@@ -22,6 +22,8 @@ See [CDS documentation](https://github.com/ovh/cds) for more details.
 
 - [Kafka Publisher](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-kafka-publish)
 - [Mesos/Marathon Deployment](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-marathon)
+- [Tmpl](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-tmpl)
+- [Mesos/Marathon Group-Tmpl](https://github.com/ovh/cds-contrib/tree/master/plugins/plugin-group-tmpl)
 
 ## Templates
 
