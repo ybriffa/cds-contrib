@@ -56,6 +56,11 @@ parameters = {
 		description = "Enable data race detection. It's flag -race"
 		value = "true"
 	}
+	"preRun" = {
+		type = "text"
+		description = "Pre-command. Example: export CGO_ENABLED=0"
+		value = ""
+	}
 }
 
 // Steps
@@ -88,6 +93,14 @@ fi;
 
 if [ "xtrue" == "x${{.detectRaceCondition}}" ]; then
   GOARGS="${{GOARGS}} -race"
+fi;
+
+if [ "x" != "x{{.preRun}}" ]; then
+cat << EOF > preRun.sh
+{{.preRun}}
+EOF
+chmod +x preRun.sh
+./preRun.sh
 fi;
 
 go build -v {{.flags}} ${GOARGS}
