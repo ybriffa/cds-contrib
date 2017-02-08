@@ -1,10 +1,23 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
+	"text/template"
+)
+
+const (
+	leftDelimTemplate  = "[["
+	rightDelimTemplate = "]]"
+)
+
+var (
+	templateReplacer *strings.Replacer = strings.NewReplacer(`[`, `\[`, `]`, `\]`)
+	regexpTemplate   *regexp.Regexp    = regexp.MustCompile(templateReplacer.Replace(leftDelimTemplate + ".+" + rightDelimTemplate))
 )
 
 // Applications is the structure of the file containing all the templates variables
@@ -57,8 +70,24 @@ func (app *Applications) Variables(name string) (map[string]interface{}, error) 
 		return nil, fmt.Errorf("application %s does not exists", name)
 	}
 
+	variables["id"] = name
+
 	var ret map[string]interface{} = make(map[string]interface{})
 	for key, defaultValue := range app.Default {
+		if defaultStrValue, ok := defaultValue.(string); ok && regexpTemplate.MatchString(defaultStrValue) {
+			tmpl, err := template.New(name+key).Delims(leftDelimTemplate, rightDelimTemplate).Parse(defaultStrValue)
+			if err != nil {
+				return nil, err
+			}
+
+			buf := new(bytes.Buffer)
+			err = tmpl.Execute(buf, variables)
+			if err != nil {
+				return nil, err
+			}
+
+			defaultValue = buf.String()
+		}
 		ret[key] = defaultValue
 	}
 
@@ -77,17 +106,18 @@ func (app *Applications) Variables(name string) (map[string]interface{}, error) 
 			}
 			value = strings.Replace(strValue, "...", defaultStrValue, 1)
 		}
+		ret[key] = value
+	}
 
+	for key, value := range ret {
 		// Check if we need to alter the value
 		if ptr, exists := app.alters[key]; exists {
-			value, err = ptr(value)
+			ret[key], err = ptr(value)
 			if err != nil {
 				return nil, fmt.Errorf("failed to apply alter on key %s : %s", key, err)
 			}
 		}
-		ret[key] = value
 	}
-	ret["id"] = name
 
 	return ret, nil
 }
